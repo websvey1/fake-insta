@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{% url 'posts:create' %}" ><h2>[글작성]</h2></a>
+<h1>LIST</h1>
+<div class="row d-flex">
+{% for post in posts %}
+    {% include 'posts/_post.html' %}
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+
+
+<div class="card" style="width: 18rem;">
+    {% if post.image %}
+  <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.image }}">
+  {% else %}
+  <img src="" class="card-img-top" alt="NMG">
+  {% endif %}
+  <div class="card-body">
+    <h5 class="card-text">{{ post.content }}</h5>
+    
+    <a href="{% url 'posts:update' post.pk %}" class="btn btn-warning"> [EDIT] </a>
+    
+    <form action="{% url 'posts:delete' post.pk %}" method="POST" onsubmit="return confirm('R e a l l y ?');" style="display:inline" >
+        {% csrf_token %}
+        <input type="submit" value="[DELETE]" class="btn btn-danger"/>
+    </form>
+    
+  </div>
+</div>
