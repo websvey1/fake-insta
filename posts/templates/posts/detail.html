@@ -1,0 +1,11 @@
+{% block content %}
+<p>{{ post.id }} / {{ post.content }}</p>
+<div>
+<a href="{% url 'posts:update' post.id %}">UPDATE</a>
+<form action="{% url 'posts:delete' post.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">삭제</button>
+</form>
+<a href="{% url 'posts:list' %}">BACK</a>
+</div>
+{% endblock %}

@@ -20,3 +20,10 @@ class Image(models.Model):       #사진올리기위해 이미지 모델을 만�
                 format='JPEG',								#포맷
                 options={'quality': 90},					#퀄리디설정
     )
+class Comment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # 우리가 만든게 아니라 정해진 단어를 써야함
+    post = models.ForeignKey(Post, on_delete=models.CASCADE) # 우리가 만든 모델이라서 Post만 쓰면 된다
+    content = models.CharField(max_length=140)
+    
+    def __str__(self):
+        return self.content

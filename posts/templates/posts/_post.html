@@ -1,5 +1,6 @@
-<div class="col-10 my-3">
-    <div class="card">    <!-- 여기 나오는 모든 post는 list에서 posts를 for문으로 돌리는 변수 post이다-->
+{% load bootstrap4 %}
+<div class="col-5 my-3">
+    <div id="{{ post.id }}"class="card">    <!-- 여기 나오는 모든 post는 list에서 posts를 for문으로 돌리는 변수 post이다-->
                             <!--list.html에서 for문 변수명을 test로 바꾸고 여기 모든 post를 test로 바꿔도 동작한다.-->
     <div class="card-header">
         <h5 class="card-text">{{ post.user }}</h5>
@@ -26,8 +27,10 @@
         {% else %}
         <img src="{{ image.file.url }}" class="card-img-top" alt="NMG">
         {% endif %}
-        <div class="card-body">
-            <h5 class="card-text">{{ post.content }}</h5>
+        <div class="d-flex align-items-center card-body">
+            <h5 class="card-text">
+                <a href="{% url 'posts:detail' post.id %}">{{ post.content }}</a>
+            </h5>
             {% if request.user == post.user %}
             <a href="{% url 'posts:update' post.pk %}" class="btn btn-warning"> [EDIT] </a>
             <!-- 의문1 post.pk와 post_pk는 무슨차이일까?-->
@@ -39,6 +42,34 @@
                 <input type="submit" value="[DELETE]" class="btn btn-danger" />
             </form>
             {% endif %}
+        </div>
+        
+        
+        <div class="card-footer">
+            {% if user.is_authenticated %}
+            <form class="d-flex align-items-start justify-content-around" 
+                action="{% url 'posts:comments_create' post.id %}" method="POST">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <button class="btn btn-primary" type="submit">댓글</button>
+            </form>
+            {% else %}
+            <a href="{% url 'accounts:login' %}">댓글달려면 로그인하세요</a>
+            
+            {% endif %}
+            <hr>
+            {% for comment in post.comment_set.all %}
+                <div class="d-flex align-items-center m-3">
+                    <span style="font-weight: bold;">{{ comment.user }}</span>&nbsp;/&nbsp;{{ comment.content }}
+                    {% if comment.user == user %}
+                    <form class="mx-2" action="{% url 'posts:comments_delete' post.id comment.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="border-0" type="submit"><i class="fas fa-times"></i></button>
+                    </form>
+                    {% endif %}
+                </div>
+            
+            {% endfor %}
         </div>
     </div>
 </div>
