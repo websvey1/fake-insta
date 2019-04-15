@@ -1,18 +1,18 @@
-from django.shortcuts import render, redirect, get_list_or_404,get_object_or_404
-from .models import Post, Image
+from django.shortcuts import render, redirect, get_list_or_404, get_object_or_404
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
 from .form import PostForm, ImageForm
-# Create your views here.
+from .models import Post
 
-def list(request):
-    posts = get_list_or_404(Post.objects.order_by('pk'))
-    context = {'posts':posts,}
-    return render(request, 'posts/list.html', context)
-
-def create(request):                        # 글 작성을 클릭하면?
-    if request.method == "POST":             # 요청이(어디서부터들어온) POST방식이면(form.html에서 정의한대로 자기 자신의링크로 POST방식으로 보내는방식)
-        post_form = PostForm(request.POST)       # PostForm을 form 변수에 담음 , 이미지는 FILES에 있음 , 이미지 따로 넣을거니까 부분을 뺀다
-        if post_form.is_valid():                 # form변수(PostForm)이 유효하다면(유효성검사)
-            post = post_form.save()                     #form을 db에 저장. # 게시글은 여기서 끝 !!!!##############
+@login_required
+def create(request):
+    if request.method == 'POST':
+        post_form = PostForm(request.POST)
+        if post_form.is_valid():
+            post = post_form.save(commit=False)  # 권한에 ㄸㅏ라 수정삭제 버튼 없앨때 False를 추가
+            post.user = request.user
+            post.save()
             for image in request.FILES.getlist('file'):
                 request.FILES['file'] = image
                 image_form = ImageForm(files=request.FILES)
@@ -20,34 +20,55 @@ def create(request):                        # 글 작성을 클릭하면?
                     image = image_form.save(commit=False)
                     image.post = post
                     image.save()
-            # return render(request, 'posts/list.html') ### 왜 이건 안돼지 ?? ####
-            return redirect('posts:list')   # form을 db에 저장 후 index페이지로 리다이렉트.
-            
+            return redirect('posts:list')
     else:
-        post_form = PostForm()                   #GET방식이면(form.html이 실행되지 않으면, 즉 그냥 create를 눌렀을때.), form 변수에 담는다.
+        post_form = PostForm()
         image_form = ImageForm()
     context = {
-        'post_form':post_form,             #dict로 데이터를 넘김
-        'image_form':image_form
+        'post_form': post_form,
+        'image_form': image_form,
     }
-    return render(request, 'posts/form.html', context)   # 생성폼을 실행.
+    return render(request, 'posts/form.html', context)
 
+def list(request):
+    posts = Post.objects.order_by('-pk')
+    context = {'posts': posts}
+    return render(request, 'posts/list.html', context)
+
+def detail(request, post_pk):
+    post = get_object_or_404(Post, pk=post_pk)
+    ctx = {
+        'post': post,
+    }
+    return render(request, 'posts/detail.html', ctx)
+
+@login_required
 def update(request, post_pk):
-    post = get_object_or_404(Post, id=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
+    ######### 권한이 없는데 수정,삭제를 url에 입력한다면################
+    if post.user != request.user:
+        return redirect('posts:list')
+    ######### 권한이 없는데 수정,삭제를 url에 입력한다면################
     if request.method == 'POST':
         post_form = PostForm(request.POST, instance=post)
         if post_form.is_valid():
             post_form.save()
-            return redirect('posts:list')
+            return redirect('posts:detail', post_pk)
     else:
         post_form = PostForm(instance=post)
-    context = {
-        'post_form':post_form
+    ctx = {
+        'post_form': post_form,
     }
-    return render(request, 'posts/form.html', context)
+    return render(request, 'posts/form.html', ctx)
 
+@require_POST
+@login_required
 def delete(request, post_pk):
-    post = get_object_or_404(Post, id=post_pk)
-    if request.method == "POST":
-        post.delete()
+    
+    post = get_object_or_404(Post, pk=post_pk)
+    ######### 권한이 없는데 수정,삭제를 url에 입력한다면################
+    if post.user != request.user:
+        return redirect('posts:list')
+    ######### 권한이 없는데 수정,삭제를 url에 입력한다면################
+    post.delete()
     return redirect('posts:list')

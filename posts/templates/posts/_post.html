@@ -1,5 +1,9 @@
 <div class="col-10 my-3">
-    <div class="card">
+    <div class="card">    <!-- 여기 나오는 모든 post는 list에서 posts를 for문으로 돌리는 변수 post이다-->
+                            <!--list.html에서 for문 변수명을 test로 바꾸고 여기 모든 post를 test로 바꿔도 동작한다.-->
+    <div class="card-header">
+        <h5 class="card-text">{{ post.user }}</h5>
+    </div>
         {% if post.image_set %}
         <div id="post{{post.pk}}" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
@@ -24,14 +28,17 @@
         {% endif %}
         <div class="card-body">
             <h5 class="card-text">{{ post.content }}</h5>
-    
+            {% if request.user == post.user %}
             <a href="{% url 'posts:update' post.pk %}" class="btn btn-warning"> [EDIT] </a>
-    
+            <!-- 의문1 post.pk와 post_pk는 무슨차이일까?-->
+            <!-- 내생각 : post.pk는 post클래스 안의 속성 pk이고
+                          post_pk(url이나 뷰함수에 있는것)은 들어오는 정수형변수의 이름이다.
+                          즉 post_pk는 아무렇게나 써도 되는 이름이고 post.pk는 클래스의 정해진 속성이다.-->
             <form action="{% url 'posts:delete' post.pk %}" method="POST" onsubmit="return confirm('R e a l l y ?');" style="display:inline">
                 {% csrf_token %}
                 <input type="submit" value="[DELETE]" class="btn btn-danger" />
             </form>
-    
+            {% endif %}
         </div>
     </div>
 </div>

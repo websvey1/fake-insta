@@ -1,19 +1,38 @@
-<nav class="sticky-top navbar navbar-expand-lg navbar-light bg-light px-5">
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light px-5">
     <a class="navbar-brand" href="{% url 'posts:list' %}">
-        <i class="fab fa-instagram">| Instagram </i>
+        <i class="fab fa-instagram"> | Instagram</i>
     </a>
-    
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-    <div class="collapse navbar-collapse justify-content-end"  id="navbarNav">
-        <ul class="navbar-nav">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'posts:create' %}">New </a>
+                <a href="{% url 'posts:create' %}" class="nav-link">New</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a href="#" class="nav-link">MyPage</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">MyPage</a>
+                <a href="{% url 'accounts:edit' %}" class="nav-link">EDIT</a>
             </li>
-        </ul>
+            <form class="nav-item" action="{% url 'accounts:logout' %}" method="POST">
+                {% csrf_token %}
+                <button class="nav-link" type="submit">Logout</button>
+            </form>
+            <form class="nav-item" action="{% url 'accounts:delete' %}" method="POST" >
+                {% csrf_token %}
+                <button class="nav-link" type="submit">탈퇴</button>
+            </form>
+            {% else %}
+            <li class="nav-item">
+                <a href="{% url 'accounts:signup' %}" class="nav-link">SignUp</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'accounts:login' %}" class="nav-link">Login</a>
+            </li>
+            {% endif %}
+        </div>
     </div>
 </nav>

@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts.apps.AccountsConfig',
     'posts.apps.PostsConfig',
     'bootstrap4',
     'imagekit',
@@ -52,7 +53,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'insta.urls'
+ROOT_URLCONF = 'insta.urls' # 이부분이 정확히 어떤 역할을 하는건지 ?따로 추가한 부분은 아님.
+                                ## 추측 : static 설정때문에 insta의 url로 연결?? 윌가 추
 
 TEMPLATES = [
     {
