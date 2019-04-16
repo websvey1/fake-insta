@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 {% block content %}
-<a href="{% url 'posts:create' %}" ><h2>[글작성]</h2></a>
-
-<a href="{% url 'accounts:signup' %}" ><h2>[회원가입]</h2></a>
+<a href="{% url 'posts:create' %}" class="btn btn-primary" >글작성</a>
+<a href="{% url 'accounts:signup' %}" class="btn btn-primary ">회원가입</a>
 <h1>LIST</h1>
 <div class="d-inline-flex flex-wrap justify-content-center">
 

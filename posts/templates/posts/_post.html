@@ -28,7 +28,17 @@
         <img src="{{ image.file.url }}" class="card-img-top" alt="NMG">
         {% endif %}
         <div class="d-flex align-items-center card-body">
+            <a href="{% url 'posts:like' post.pk %}" class="card-link">
+                {{ post.like_users.count }}
+                {% if user in post.like_users.all %}
+                    <i class="fas fa-heart fa-lg" style="color:crimson"></i>
+                {% else %}
+                    <i class="fas fa-heart fa-lg" style="color:black"></i>
+                {% endif %}
+                
+            </a>
             <h5 class="card-text">
+                <br>
                 <a href="{% url 'posts:detail' post.id %}">{{ post.content }}</a>
             </h5>
             {% if request.user == post.user %}

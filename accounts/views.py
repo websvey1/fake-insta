@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login, logout as auth_logout, update_session_auth_hash
+from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from .forms import *
@@ -44,6 +45,13 @@ def login(request):
 def logout(request):
     auth_logout(request)
     return redirect('posts:list')
+
+def people(request, username):
+    people = get_object_or_404(get_user_model(), username=username)
+    context = {
+        'people':people,
+        }
+    return render(request, 'accounts/people.html', context)
 
 @login_required
 def edit(request):

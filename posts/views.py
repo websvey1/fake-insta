@@ -48,15 +48,18 @@ def detail(request, post_pk):
 @login_required
 def update(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
+    
     ######### 권한이 없는데 수정,삭제를 url에 입력한다면################
     if post.user != request.user:
         return redirect('posts:list')
     ######### 권한이 없는데 수정,삭제를 url에 입력한다면################
+    
+    
     if request.method == 'POST':
         post_form = PostForm(request.POST, instance=post)
         if post_form.is_valid():
             post_form.save()
-            return redirect('posts:detail', post_pk)
+            return redirect('posts:list')
     else:
         post_form = PostForm(instance=post)
     ctx = {
@@ -76,13 +79,6 @@ def delete(request, post_pk):
     post.delete()
     return redirect('posts:list')
 
-def detail(request, post_pk):
-    post = get_object_or_404(Post, pk=post_pk)
-    ctx = {
-        'post': post,
-    }
-    return render(request, 'posts/detail.html', ctx)
-
 @require_POST
 @login_required
 def comments_create(request, post_pk): # 여기 post는 어디서 오는걸까
@@ -101,3 +97,18 @@ def comments_delete(request, post_pk, comment_pk):
     if request.user == comment.user:
         comment.delete()    
     return redirect(f'/posts/#{post_pk}')
+
+@login_required
+def like(request, post_pk):
+    post = get_object_or_404(Post, pk=post_pk)
+    
+    ####### 1번 방법 ################
+    if request.user in post.like_users.all():
+        post.like_users.remove(request.user)
+    else:
+        post.like_users.add(request.user)
+    return redirect('posts:list')
+    ##### 2번방법#####################
+    # user = request.user
+    # if post.like_users.filter(pk=user.pk).exists():
+    #     post.like_users.remove()

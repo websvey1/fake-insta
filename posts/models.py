@@ -7,6 +7,7 @@ from imagekit.processors import ResizeToFill #이미지 수정
 
 class Post(models.Model): # Post라는 모델을 생성
     content = models.TextField() 
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_posts', blank=True) # 컬럼을 만들어 지는것이 아니다!!!
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # 권한설정을 위한 외래키,
     def __str__(self):
         return self.content

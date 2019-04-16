@@ -9,7 +9,8 @@
                                         <!-- 뷰함수 update와 create 두개가 다 form.html로 render하기 때문에 분기를 나눔 -->
 <h1> EDIT </h1>
 {% endif %}
-<form action="" method="POST" enctype="multipart/form-data"> <!--multipart가 없어도 여러장 선택이 된다. 이 역할은 뭘까?  -->
+<form action="" method="POST" enctype="multipart/form-data"> <!--multipart가 없어도 여러장 선택이 된다. 이 역할은 뭘까? 
+                                                                                     = > 이미지 올릴때 필요하다.-->
     {% csrf_token %}                                          <!--action이 자신이면 submit하면 자신의링크(views.py에서 정의된)로 보낸다 -->
     {% bootstrap_form post_form %}                             <!-- action이 자기자신이 아니라 url posts:list면 저장이안된다. 왜지.
                                                                 A: 그러면 list로 보내는게 아니라 list url로 이동하는기에 view함수 create로 들어가는게 아니라
