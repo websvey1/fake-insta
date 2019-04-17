@@ -22,8 +22,9 @@ urlpatterns = [
     
     path('accounts/', include('accounts.urls')),
     path('posts/', include('posts.urls')),
-    path('<str:username>/', accounts_views.people, name='people'),
     path('admin/', admin.site.urls),
+    path('<str:username>/', accounts_views.people, name='people'),
+    
     
 ]
 

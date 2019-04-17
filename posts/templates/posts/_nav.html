@@ -22,15 +22,21 @@
                 <a href="{% url 'people' user.username %}" class="nav-link">MyPage</a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'accounts:edit' %}" class="nav-link">EDIT</a>
+                <a href="{% url 'accounts:edit' %}" class="nav-link">회원정보수정</a>
             </li>
+            <!-- <li class="nav-item">-->
+            <!--    <a href="{# url 'accounts:logout' #}" class="nav-link">로그아웃</a>-->
+            <!--</li>-->
+            <!-- <li class="nav-item">-->
+            <!--    <a href="{# url 'accounts:delete' #}" class="nav-link">회원탈퇴</a>-->
+            <!--</li>-->
             <form class="nav-item" action="{% url 'accounts:logout' %}" method="POST">
                 {% csrf_token %}
-                <button class="nav-link" type="submit">Logout</button>
+                <button class="nav-link btn btn-info" type="submit">Logout</button>
             </form>
-            <form class="nav-item" action="{% url 'accounts:delete' %}" method="POST" >
+            <form class="nav-item" action="{% url 'accounts:delete' %}" method="POST" onsubmit="return confirm('정 말탈 퇴?');">
                 {% csrf_token %}
-                <button class="nav-link" type="submit">탈퇴</button>
+                <button class="nav-link btn btn-danger" type="submit">탈퇴</button>
             </form>
             {% else %}
             <li class="nav-item">

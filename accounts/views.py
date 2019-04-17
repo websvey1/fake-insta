@@ -14,6 +14,7 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            Profile.objects.create(user=user)    # 프로필 추가
             auth_login(request, user)
             return redirect('posts:list')
     else:
@@ -59,7 +60,8 @@ def edit(request):
         form = UserCustomChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('posts:list')
+            # return redirect('posts:list')
+            return redirect('people', request.user.username)  # 인자가 왜 필요한거지 ? 없어도 될거같은데
     else:
         form = UserCustomChangeForm(instance=request.user)
     ctx = {
@@ -80,7 +82,7 @@ def password_change(request):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)
+            update_session_auth_hash(request, user)  # 비번변경시 로그아웃 되지 않게 해주는 것, 인자가 요청과 객체
             return redirect('posts:list')
     else:
         form = PasswordChangeForm(request.user)
@@ -88,3 +90,18 @@ def password_change(request):
         'form': form,
     }
     return render(request, 'accounts/form.html', ctx)
+
+@login_required
+def profile_update(request):
+    if request.method=="POST":
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('people', request.user.username)
+    else:
+        profile_form = ProfileForm(instance=request.user.profile)
+    context = {
+        'profile_form': profile_form,
+    }
+    return render(request, 'accounts/profile_update.html', context)
+        

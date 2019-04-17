@@ -38,11 +38,11 @@
                 
             </a>
             <h5 class="card-text">
-                <br>
                 <a href="{% url 'posts:detail' post.id %}">{{ post.content }}</a>
             </h5>
+            <br>
             {% if request.user == post.user %}
-            <a href="{% url 'posts:update' post.pk %}" class="btn btn-warning"> [EDIT] </a>
+            <a href="{% url 'posts:update' post.pk %}" class="btn btn-warning">[EDIT] </a>
             <!-- 의문1 post.pk와 post_pk는 무슨차이일까?-->
             <!-- 내생각 : post.pk는 post클래스 안의 속성 pk이고
                           post_pk(url이나 뷰함수에 있는것)은 들어오는 정수형변수의 이름이다.
