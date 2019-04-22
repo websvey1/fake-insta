@@ -41,7 +41,7 @@ def create(request):
         'image_form': image_form,
     }
     return render(request, 'posts/form.html', context)
-
+@login_required
 def list(request):
     ########### 1 #############
     followings=request.user.followings.all()

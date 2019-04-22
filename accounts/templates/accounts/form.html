@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load socialaccount %}
 {% block content %}
 {% if request.resolver_match.url_name == 'login' %}
+
 <h1>Login</h1>
 {% elif request.resolver_match.url_name == 'signup' %}
 <h1>Signup</h1>
@@ -12,4 +14,5 @@
     <input type="hidden" name="next" value="{{ next }}">
     <button type="submit" class="btn btn-primary">제출</button>
 </form>
+<a href="{% provider_login_url 'kakao' method='oauth2' %}" class="btn btn-warning">카카로오그인</a>
 {% endblock %}

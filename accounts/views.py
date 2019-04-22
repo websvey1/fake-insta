@@ -93,6 +93,8 @@ def password_change(request):
 
 @login_required
 def profile_update(request):
+    profile = Profile.objects.get_or_create(user=request.user)  # 카카오로그인으로 하면, 로그인 절차를 무시하고 로그인하기때문에 
+                                                                # 프로필을 생성하지 않는다. 따라서 프로필이 있으면 get하고 없으면 create한다
     if request.method=="POST":
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
         if profile_form.is_valid():
