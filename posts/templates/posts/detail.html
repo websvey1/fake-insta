@@ -1,5 +1,6 @@
 {% block content %}
-<p>{{ post.id }} / {{ post.content }}</p>
+{% load posts_templatetag %}
+<p>{{ post.id }} / {{ post|hashtag_link|safe  }}</p>
 <div>
 <a href="{% url 'posts:update' post.id %}">UPDATE</a>
 <form action="{% url 'posts:delete' post.id %}" method="POST">

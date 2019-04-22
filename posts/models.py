@@ -4,11 +4,18 @@ from imagekit.models import ProcessedImageField #이미지 업로드
 from imagekit.processors import ResizeToFill #이미지 수정
 
 # Create your models here.
+class Hashtag(models.Model):
+    content = models.TextField(unique=True)
+    
+    def __str__(self):
+        return self.content
+    
 
 class Post(models.Model): # Post라는 모델을 생성
     content = models.TextField() 
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_posts', blank=True) # 컬럼을 만들어 지는것이 아니다!!!
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # 권한설정을 위한 외래키,
+    hashtags = models.ManyToManyField(Hashtag, blank=True) # 역참조가 필요 없다는데 왜 필요없지?.. 위에 like_posts와 비교해보기
     def __str__(self):
         return self.content
         

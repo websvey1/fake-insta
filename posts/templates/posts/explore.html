@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>LIST</h1>
+<div class="d-inline-flex flex-wrap justify-content-center">
+
+{% for post in posts %}  <!-- post는 내가 정하는것.. 이 변수가 _post로 간다-->
+    {% include 'posts/_post.html' %}
+{% endfor %}
+</div>
+{% endblock %}

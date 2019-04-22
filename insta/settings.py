@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'posts.apps.PostsConfig',
     'bootstrap4',
     'imagekit',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -125,3 +126,4 @@ USE_TZ = False
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/' # 가상공간
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # 실제공간
+AUTH_USER_MODEL = 'accounts.User' # 오버라이딩 과정, 기본 User 모델을 오버라이드(덮어쓰기) !

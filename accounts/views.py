@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login, logout as auth_logout, update_session_auth_hash
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_POST
@@ -11,14 +11,14 @@ def signup(request):
     if request.user.is_authenticated:
         return redirect('posts:list') # 로그인 한 상태에서 회원가입 누르면 인덱스로 리턴!!!
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             Profile.objects.create(user=user)    # 프로필 추가
             auth_login(request, user)
             return redirect('posts:list')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     ctx = {
         'form': form,
     }
@@ -105,3 +105,13 @@ def profile_update(request):
     }
     return render(request, 'accounts/profile_update.html', context)
         
+@login_required
+def follow(request, user_pk):
+    people = get_object_or_404(get_user_model(), pk=user_pk)
+    if request.user in people.followers.all():
+        people.followers.remove(request.user)
+    # people(팔로우 누르려고 하는 애)이 팔로우 하고 있는 모든 유저중에, 현재 접속유저가 있으면, 언팔
+    else:
+        people.followers.add(request.user)
+    return redirect('people', people.username)
+    # 아니면 팔로우

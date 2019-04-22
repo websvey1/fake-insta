@@ -1,9 +1,11 @@
 {% load bootstrap4 %}
+{% load posts_templatetag %}
+{% load 
 <div class="col-5 my-3">
     <div id="{{ post.id }}"class="card">    <!-- 여기 나오는 모든 post는 list에서 posts를 for문으로 돌리는 변수 post이다-->
                             <!--list.html에서 for문 변수명을 test로 바꾸고 여기 모든 post를 test로 바꿔도 동작한다.-->
     <div class="card-header">
-        <h5 class="card-text">{{ post.user }}</h5>
+         <h5 class="card-text"><a class="card-link" href="{% url 'people' post.user.username %}">{{ post.user }}</a></h5>
     </div>
         {% if post.image_set %}
         <div id="post{{post.pk}}" class="carousel slide" data-ride="carousel">
@@ -27,7 +29,7 @@
         {% else %}
         <img src="{{ image.file.url }}" class="card-img-top" alt="NMG">
         {% endif %}
-        <div class="d-flex align-items-center card-body">
+        <div class="card-body">
             <a href="{% url 'posts:like' post.pk %}" class="card-link">
                 {{ post.like_users.count }}
                 {% if user in post.like_users.all %}

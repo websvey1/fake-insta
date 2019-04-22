@@ -3,6 +3,8 @@ from . import views
 app_name = 'posts'
 
 urlpatterns = [
+    path('explore/', views.explore, name='explore'),
+    path('hashtag/<int:hash_pk>/', views.hashtag, name='hashtag'),
     path('<int:post_pk>/like/', views.like, name='like'),
     path('<int:post_pk>/comments/<int:comment_pk>/delete/', views.comments_delete, name='comments_delete'),
     path('<int:post_pk>/comments', views.comments_create, name='comments_create'),
